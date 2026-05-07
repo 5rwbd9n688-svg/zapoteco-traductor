@@ -96,3 +96,43 @@ button{
 .word{
   margin:6px 0;
 }
+
+.menu-wrapper{
+  margin-top:20px;
+  margin-bottom:20px;
+}
+
+.menu-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#111827;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.categories-panel{
+  margin-top:12px;
+}
+
+.hidden{
+  display:none;
+}
+
+.category{
+  background:#1e293b;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+
+.category h3{
+  color:#67e8f9;
+  margin-bottom:8px;
+}
+
+.word{
+  margin:6px 0;
+}
