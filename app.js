@@ -1,161 +1,115 @@
-import { dictionary } from "./data/dictionary.js";
-import { db } from "./firebase-config.js";
+const dictionary = [
+  { category:"Pronombres", es:"Yo", zap:"Naa" },
+  { category:"Pronombres", es:"Tú", zap:"Luu" },
+  { category:"Pronombres", es:"Él", zap:"Laa" },
 
-import {
-  collection,
-  addDoc,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  { category:"Saludos", es:"Hola", zap:"Guié" },
+  { category:"Saludos", es:"Gracias", zap:"Diuxi" },
+  { category:"Saludos", es:"Adiós", zap:"Bidxa" },
+
+  { category:"Casa", es:"Casa", zap:"Yoo" },
+  { category:"Casa", es:"Agua", zap:"Nisa" },
+  { category:"Casa", es:"Pueblo", zap:"Guidxi" },
+
+  { category:"Comida", es:"Tortilla", zap:"Gueta" },
+  { category:"Comida", es:"Maíz", zap:"Bizaa" },
+
+  { category:"Familia", es:"Mamá", zap:"Nana" },
+  { category:"Familia", es:"Papá", zap:"Tata" },
+
+  { category:"Naturaleza", es:"Sol", zap:"Gubidxa" },
+  { category:"Naturaleza", es:"Luna", zap:"Guela" }
+];
 
 const result = document.getElementById("result");
 const categoriesContainer = document.getElementById("categoriesContainer");
 
-let words = [...dictionary];
-
-function normalize(text) {
-  return text
-    .toLowerCase()
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+function normalize(text){
+  return text.toLowerCase().trim();
 }
 
-window.translateText = function () {
+function translateText(){
   const input = normalize(document.getElementById("inputText").value);
+  const from = document.getElementById("fromLang").value;
 
-  if (!input) {
-    result.innerText = "Escribe una palabra";
+  if(!input){
+    result.textContent = "Escribe una palabra";
     return;
   }
 
-  const from = document.getElementById("fromLang").value;
+  let found = null;
 
-  const found = words.find(item => {
-    const source = from === "es" ? item.es : item.zap;
-    return normalize(source) === input;
-  });
+  for(let i = 0; i < dictionary.length; i++){
+    const item = dictionary[i];
 
-  result.innerText = found
-    ? (from === "es" ? found.zap : found.es)
-    : "No encontrado";
-};
+    if(from === "es"){
+      if(normalize(item.es) === input){
+        found = item;
+        break;
+      }
+    }else{
+      if(normalize(item.zap) === input){
+        found = item;
+        break;
+      }
+    }
+  }
 
-window.searchWord = function () {
-  const query = normalize(document.getElementById("searchWord").value);
+  if(found){
+    result.textContent = from === "es" ? found.zap : found.es;
+  }else{
+    result.textContent = "No encontrado";
+  }
+}
 
-  const filtered = words.filter(item =>
-    normalize(item.es).includes(query) ||
-    normalize(item.zap).includes(query)
-  );
-
-  renderCategories(filtered);
-};
-
-function renderCategories(data) {
+function renderCategories(data){
   categoriesContainer.innerHTML = "";
 
   const grouped = {};
 
   data.forEach(item => {
-    if (!grouped[item.category]) {
+    if(!grouped[item.category]){
       grouped[item.category] = [];
     }
     grouped[item.category].push(item);
   });
 
-  for (const category in grouped) {
+  for(const category in grouped){
     const div = document.createElement("div");
     div.className = "category";
 
-    div.innerHTML = `
-      <h3>${category}</h3>
-      ${
-        grouped[category]
-          .map(word => `
-            <p class="word">
-              <strong>${word.es}</strong> ⇄ ${word.zap}
-            </p>
-          `)
-          .join("")
-      }
-    `;
+    let html = `<h3>${category}</h3>`;
 
+    grouped[category].forEach(word => {
+      html += `<p class="word">${word.es} ⇄ ${word.zap}</p>`;
+    });
+
+    div.innerHTML = html;
     categoriesContainer.appendChild(div);
   }
 }
 
-async function loadFirebaseWords() {
-  try {
-    const snapshot = await getDocs(collection(db, "words"));
+function searchWord(){
+  const query = normalize(document.getElementById("searchWord").value);
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
-
-      const exists = words.some(item =>
-        normalize(item.es) === normalize(data.es)
-      );
-
-      if (!exists) {
-        words.push(data);
-      }
-    });
-
-    renderCategories(words);
-
-  } catch (error) {
-    console.error(error);
-    renderCategories(words);
-  }
-}
-
-window.addWord = async function () {
-  const es = document.getElementById("newSpanish").value.trim();
-  const zap = document.getElementById("newZapotec").value.trim();
-  const category = document.getElementById("newCategory").value.trim();
-
-  if (!es || !zap || !category) {
-    alert("Completa todos los campos");
-    return;
-  }
-
-  const exists = words.some(item =>
-    normalize(item.es) === normalize(es)
+  const filtered = dictionary.filter(item =>
+    normalize(item.es).includes(query) ||
+    normalize(item.zap).includes(query)
   );
 
-  if (exists) {
-    alert("Esa palabra ya existe");
-    return;
-  }
+  renderCategories(filtered);
+}
 
-  const newWord = { es, zap, category };
+document.getElementById("translateBtn").addEventListener("click", translateText);
+document.getElementById("searchBtn").addEventListener("click", searchWord);
 
-  try {
-    await addDoc(collection(db, "words"), newWord);
+document.getElementById("swapBtn").addEventListener("click", function(){
+  const from = document.getElementById("fromLang");
+  const to = document.getElementById("toLang");
 
-    words.push(newWord);
+  const temp = from.value;
+  from.value = to.value;
+  to.value = temp;
+});
 
-    renderCategories(words);
-
-    document.getElementById("newSpanish").value = "";
-    document.getElementById("newZapotec").value = "";
-    document.getElementById("newCategory").value = "";
-
-    alert("Palabra guardada");
-
-  } catch (error) {
-    console.error(error);
-    alert("Error al guardar");
-  }
-};
-
-document
-  .getElementById("swapBtn")
-  .addEventListener("click", () => {
-    const from = document.getElementById("fromLang");
-    const to = document.getElementById("toLang");
-
-    [from.value, to.value] = [to.value, from.value];
-  });
-
-renderCategories(words);
-loadFirebaseWords();
+renderCategories(dictionary);
