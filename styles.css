@@ -51,10 +51,21 @@ textarea{
   margin-bottom:15px;
 }
 
+textarea:focus,
+input:focus,
+select:focus{
+  outline:2px solid #67e8f9;
+}
+
 button{
   background:#7c3aed;
   color:white;
   cursor:pointer;
+  transition:.25s;
+}
+
+button:hover{
+  transform:translateY(-1px);
 }
 
 #translateBtn{
@@ -73,28 +84,13 @@ button{
   margin-top:8px;
   color:#67e8f9;
   font-size:20px;
+  font-weight:600;
 }
 
 .search-box{
   display:flex;
   gap:10px;
   margin-bottom:25px;
-}
-
-.category{
-  background:#1e293b;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:15px;
-}
-
-.category h3{
-  color:#67e8f9;
-  margin-bottom:10px;
-}
-
-.word{
-  margin:6px 0;
 }
 
 .menu-wrapper{
@@ -111,14 +107,22 @@ button{
   color:white;
   font-size:16px;
   cursor:pointer;
+  text-align:left;
 }
 
 .categories-panel{
   margin-top:12px;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .35s ease;
+}
+
+.categories-panel.open{
+  max-height:1200px;
 }
 
 .hidden{
-  display:none;
+  display:block;
 }
 
 .category{
@@ -131,8 +135,41 @@ button{
 .category h3{
   color:#67e8f9;
   margin-bottom:8px;
+  font-size:18px;
 }
 
 .word{
   margin:6px 0;
+  padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.word:last-child{
+  border-bottom:none;
+}
+
+.add-word-box{
+  margin-top:25px;
+  background:#111827;
+  padding:20px;
+  border-radius:15px;
+}
+
+.add-word-box h3{
+  margin-bottom:12px;
+}
+
+.add-word-box input{
+  margin-bottom:10px;
+}
+
+.add-word-box button{
+  width:100%;
+}
+
+@media(max-width:700px){
+  .controls,
+  .search-box{
+    flex-direction:column;
+  }
 }
