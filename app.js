@@ -113,3 +113,10 @@ document.getElementById("swapBtn").addEventListener("click", function(){
 });
 
 renderCategories(dictionary);
+
+const menuBtn = document.getElementById("menuBtn");
+const categoriesPanel = document.getElementById("categoriesPanel");
+
+menuBtn.addEventListener("click", function () {
+  categoriesPanel.classList.toggle("hidden");
+});
