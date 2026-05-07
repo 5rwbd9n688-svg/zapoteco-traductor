@@ -1,91 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Traductor Zapoteco Istmeño</title>
-
-  <link rel="stylesheet" href="styles.css">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traductor Nuestra lengua</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <div class="background"></div>
+<div class="container">
 
-  <header>
-    <h1>🌎 Traductor Zapoteco Istmeño</h1>
-    <p>Español ⇄ Zapoteco</p>
-  </header>
+  <h1>🌎 Traductor Zapoteco Istmeño</h1>
 
-  <main>
+  <div class="controls">
+    <select id="fromLang">
+      <option value="es">Español</option>
+      <option value="zap">Zapoteco</option>
+    </select>
 
-    <section class="translator-card">
+    <button id="swapBtn">⇄</button>
 
-      <div class="controls">
+    <select id="toLang">
+      <option value="zap">Zapoteco</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
 
-        <select id="fromLang">
-          <option value="es">Español</option>
-          <option value="zap">Zapoteco</option>
-        </select>
+  <textarea id="inputText" placeholder="Escribe una palabra..."></textarea>
 
-        <button id="swapBtn">⇄</button>
+  <button id="translateBtn">Traducir</button>
 
-        <select id="toLang">
-          <option value="zap">Zapoteco</option>
-          <option value="es">Español</option>
-        </select>
+  <div class="result-box">
+    <h3>Resultado</h3>
+    <p id="result">...</p>
+  </div>
 
-      </div>
+  <div class="search-box">
+    <input type="text" id="searchWord" placeholder="Buscar palabra">
+    <button id="searchBtn">Buscar</button>
+  </div>
 
-      <textarea id="inputText" placeholder="Escribe una palabra o frase..."></textarea>
+  <div id="categoriesContainer"></div>
 
-      <button class="translate-btn" onclick="translateText()">
-        Traducir
-      </button>
+</div>
 
-      <div class="result-box">
-        <h3>Resultado:</h3>
-        <p id="result">...</p>
-      </div>
-
-    </section>
-
-    <section class="search-section">
-      <input type="text" id="searchWord" placeholder="Buscar palabra...">
-      <button onclick="searchWord()">Buscar</button>
-    </section>
-
-    <section class="categories-section">
-      <h2>Categorías</h2>
-
-      <div id="categoriesContainer"></div>
-    </section>
-
-    <section class="add-word-section">
-
-      <h2>Agregar nueva palabra</h2>
-
-      <input type="text" id="newSpanish" placeholder="Español">
-      <input type="text" id="newZapotec" placeholder="Zapoteco">
-      <input type="text" id="newCategory" placeholder="Categoría">
-
-      <button onclick="addWord()">
-        Guardar palabra
-      </button>
-
-    </section>
-
-  </main>
-
-  <footer>
-    <p>
-      Traductor Zapoteco Istmeño • Hecho con ❤️
-    </p>
-  </footer>
-
-   <script type="module" src="app.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
